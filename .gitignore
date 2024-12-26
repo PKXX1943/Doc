@@ -1,0 +1,13 @@
+.vscode
+.ipynb_checkpoints
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+data
+debug
+output
+runs
+ckpt
+notebooks
