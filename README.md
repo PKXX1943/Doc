@@ -1,6 +1,6 @@
 # Document Tampering Detection YOLO
 
-This is the implement of the final PJ for Fudan Computer Vision lecture.
+This is the implementation of the final PJ for Fudan Computer Vision lecture.
 
 Authors: 
 
