@@ -66,7 +66,8 @@ from ultralytics.nn.modules import (
     ConvImage,
     ConvExtra,
     AFI,
-    Down
+    Down,
+    C2PSA_biformer
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -962,8 +963,8 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
     if scales:
         scale = d.get("scale")
         if not scale:
-            scale = tuple(scales.keys())[0]
-            # scale = tuple(scales.keys())[2]
+            scale = tuple(scales.keys())[0] # n
+            # scale = tuple(scales.keys())[2] # m
             LOGGER.warning(f"WARNING ⚠️ no model scale passed. Assuming scale='{scale}'.")
         depth, width, max_channels = scales[scale]
 
@@ -994,6 +995,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             SPPF,
             C2fPSA,
             C2PSA,
+            C2PSA_biformer,
             DWConv,
             Focus,
             BottleneckCSP,
@@ -1046,6 +1048,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
                 C2fPSA,
                 C2fCIB,
                 C2PSA,
+                C2PSA_biformer,
             }:
                 args.insert(2, n)  # number of repeats
                 n = 1

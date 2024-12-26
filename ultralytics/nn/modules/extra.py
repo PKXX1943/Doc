@@ -36,7 +36,7 @@ class ConvExtra(nn.Module):
     default_act = nn.SiLU()  # default activation
     def __init__(self, c1, c2, k=1, s=1, p=None, g=1, d=1, act=True):
         super().__init__()
-        self.conv = nn.Conv2d(4, c2, k, s, autopad(k, p, d), groups=g, dilation=d, bias=False)
+        self.conv = nn.Conv2d(2, c2, k, s, autopad(k, p, d), groups=g, dilation=d, bias=False)
         self.bn = nn.BatchNorm2d(c2)
         self.act = self.default_act if act is True else act if isinstance(act, nn.Module) else nn.Identity()
 
@@ -49,10 +49,13 @@ class ConvExtra(nn.Module):
         return self.act(self.conv(x))
     
 class AFI(nn.Module):
-    def __init__(self, num_features=512, num_cat=2):
+    def __init__(self, num_features=512, num_cat=2, base:int=None):
         super().__init__()
         self.num_cat = num_cat
         self.num_features = num_features
+        if base is not None:
+            assert base in [0,1]
+        self.base = base
         self.attn = nn.Sequential(
             nn.Conv2d(num_features * num_cat, num_features, kernel_size=3, padding=1), nn.SiLU(),
             nn.Conv2d(num_features, num_features, kernel_size=3, padding=1), nn.SiLU(),
@@ -70,8 +73,11 @@ class AFI(nn.Module):
         concat = torch.cat(x, dim=1)
         attn = self.attn(concat)
         attn_map = F.softmax(attn.view(n, self.num_cat, c, h, w), 1)
-        x = x[0] * attn_map[:, 0, :, :, :] + x[1] * attn_map[:, 1, :, :, :]
-        x = x + self.refine(x)
+        x_f = x[0] * attn_map[:, 0, :, :, :] + x[1] * attn_map[:, 1, :, :, :]
+        if self.base is not None:
+            x = x_f + self.refine(x[self.base])
+        else:
+            x = x_f + self.refine(x_f)
         return x
 
 
@@ -102,7 +108,7 @@ class Down(nn.Module):
     def forward_fuse(self, x):
         """Apply convolution and activation without batch normalization."""
         return self.pool(self.act(self.convs(x)+self.shortcut(x)))
-
+    
 # Squeeze-and-Excitation (SE) 层，用于通过通道加权来重新校准特征图
 class SELayer(nn.Module):
     def __init__(self, channel, reduction=16):

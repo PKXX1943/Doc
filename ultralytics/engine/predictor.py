@@ -112,7 +112,7 @@ class BasePredictor:
         self.txt_path = None
         self._lock = threading.Lock()  # for automatic thread-safe inference
         
-        self.extra = True
+        self.extra = False
 
         callbacks.add_integration_callbacks(self)
 
