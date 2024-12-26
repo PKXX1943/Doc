@@ -50,7 +50,7 @@ self.extra = False
 Visualize the detection results on validation set for debugging
 
 ```
-python vis
+python vis.py
 ```
 
 ## Model 
