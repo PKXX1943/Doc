@@ -14,17 +14,10 @@ python yolo_train.py
 
 _To avoid extra transforms and inputs (e.g. ELA, BlockDCT) , please modify codes in_
 
-1. _ultralytics/data/dataset.py: line 185_
+_ultralytics/data/dataset.py: line 65_
 
 ```python
-# transforms.append(DctElaTransform())
-```
-
-2. _ultralytics/data/dataset.py: line 196_
-
-```python
-bgr=hyp.bgr if self.augment else 0.0,  # only affect training.
-# bgr=1.0
+self.extra = False
 ```
 
 ## Testing
@@ -39,7 +32,7 @@ You will get a json file recording the detected bboxes of images in test directo
 
 _To avoid extra transforms and inputs (e.g. ELA, BlockDCT) , please modify codes in_
 
-1. _ultralytics/engine/predictor.py: line 115_
+_ultralytics/engine/predictor.py: line 115_
 
 ```python
 self.extra = False
