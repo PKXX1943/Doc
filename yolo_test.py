@@ -25,11 +25,11 @@ from ultralytics.data.augment import DctElaTransform, Format
 #     single_cls=True,
 # )
 
-task_name = '11n_2b_7c'
+task_name = 'yolo11m_2b_biformer'
 # model = YOLO('yolo11n-2branch.yaml').to('cuda')
 # model.load(os.path.join('runs/detect', task_name, 'weights', 'best.pt'))
-model = YOLO(os.path.join('runs/detect', task_name, 'weights', 'best.pt'))
-
+# model = YOLO(os.path.join('runs/detect', task_name, 'weights', 'best.pt'))
+model = YOLO(os.path.join('runs/detect/extra', task_name, 'weights', 'best.pt'))
 # Output Detection for Test Images
 test_dir = "data/val_images"
 
@@ -50,7 +50,7 @@ for pic in tqdm(os.listdir(test_dir)):
 
 import json
 
-with open("data/result_11n_2b_7c.json", "w") as f:
+with open(f"output/result_{task_name}.json", "w") as f:
     f.write('[')
     for pic in js:
         f.write(json.dumps({"id": pic, "region": js[pic]}) + ",\n")
