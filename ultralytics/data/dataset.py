@@ -62,7 +62,7 @@ class YOLODataset(BaseDataset):
         self.use_obb = task == "obb"
         self.data = data
 
-        self.extra = False
+        self.extra = True
 
         assert not (self.use_segments and self.use_keypoints), "Can not use both segments and keypoints."
         super().__init__(*args, **kwargs)
